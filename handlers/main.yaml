@@ -1,0 +1,2 @@
+- name: Restart iptables
+  systemd: name=iptables state=restarted enabled=yes
