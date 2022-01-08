@@ -28,5 +28,5 @@
   package:
     name: "{{ item.name | default(item) }}"
     state: "{{ item.state | default('present') }}"
-  notify: restart kubelet
+  notify: Restart kubelet
   with_items: "{{ kubernetes_packages }}"
