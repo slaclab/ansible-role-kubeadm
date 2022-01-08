@@ -1,0 +1,14 @@
+- name: Ensure iptables-services 
+  package: state=present name={{ item }}
+  when:  ansible_os_family == "RedHat"
+  with_items:
+  - iptables-services
+  notify:
+  - Restart iptables
+
+- name: Ensure netfilter-persistent
+  package: state=present name={{ item }}
+  when:  ansible_os_family == "Debian"
+  with_items:
+  - netfilter-persistent
+

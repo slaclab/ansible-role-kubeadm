@@ -1,0 +1,5 @@
+- name: Disable firewalld
+  systemd: name=firewalld state=stopped enabled=no
+  when:  ansible_os_family == "RedHat"
+  ignore_errors: yes
+

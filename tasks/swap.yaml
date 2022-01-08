@@ -1,0 +1,14 @@
+- name: disable swap
+  command: swapoff --all
+
+- name: Remove swap from /etc/fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
+- name: Remove none-swap from /etc/fstab
+  mount:
+    name: none
+    fstype: swap
+    state: absent

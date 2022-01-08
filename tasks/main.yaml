@@ -1,0 +1,20 @@
+# pre
+- include: firewalld.yaml
+- include: iptables.yaml
+- include: kernel.yaml
+- include: selinux.yaml
+- include: swap.yaml
+
+# packages
+- include_tasks: packages-RedHat.yaml
+  when: ansible_os_family == "RedHat"
+- include_tasks: packages-Debian.yaml
+  when: ansible_os_family == "Debian"
+
+# post
+- name: Ensure kubelet is started and enabled at boot
+  service:
+    name: kubelet
+    state: started
+    enabled: true
+

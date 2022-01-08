@@ -1,0 +1,8 @@
+- name: Disable selinux
+  selinux: 
+    policy: "{{ selinux_policy | default ('targeted') }}"
+    state:  "{{ selinux_state  | default ('permissive') }}"
+  register: command_result
+
+# trigger reboot if required?
+

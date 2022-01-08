@@ -1,0 +1,70 @@
+- name: load ip_vs kernel modules
+  modprobe: name={{ item }} state=present
+  with_items:
+  - ip_vs_wrr
+  - ip_vs_rr
+  - ip_vs_sh
+  - ip_vs
+  - nf_conntrack
+- name: persist ip_vs kernel modules
+  copy:
+    dest: /etc/modules-load.d/k8s_ip_vs.conf
+    content: |
+      ip_vs_wrr
+      ip_vs_rr
+      ip_vs_sh
+      ip_vs
+      nf_conntrack
+
+- name: load bridge kernel module
+  modprobe: name={{item}} state=present
+  with_items:
+  - bridge
+  ignore_errors: yes
+- name: persist bridge kernel modules
+  copy:
+    dest: "/etc/modules-load.d/k8s_bridge.conf"
+    content: |
+      bridge
+
+- name: load br_netfilter kernel module
+  modprobe: name={{item}} state=present
+  with_items:
+  - br_netfilter
+  register: br_netfilter_load_result
+  ignore_errors: yes
+- name: persist bridge and br_netfilter kernel modules
+  copy:
+    dest: "/etc/modules-load.d/k8s_br_netfilter.conf"
+    content: |
+      br_netfilter
+  when:
+  - br_netfilter_load_result is not failed
+
+- name: setup net.bridge.bridge-nf-call-iptables sysctl
+  sysctl:
+    state: present
+    name: net.bridge.bridge-nf-call-iptables
+    value: "1"
+- name: setup net.bridge.bridge-nf-call-ip6tables sysctl
+  sysctl:
+    state: present
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: "1"
+- name: setup net.ipv4.ip_forward sysctl
+  sysctl:
+    state: present
+    name: "net.ipv4.ip_forward"
+    value: "1"
+- name: setup net.ipv4.ip_nonlocal_bind sysctl
+  sysctl:
+    state: present
+    name: "net.ipv4.ip_nonlocal_bind"
+    value: "1"
+- name: setup net.netfilter.nf_conntrack_max sysctl
+  sysctl:
+    state: present
+    name:  "net.netfilter.nf_conntrack_max"
+    value: "1000000"
+
+

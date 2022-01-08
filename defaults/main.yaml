@@ -1,0 +1,25 @@
+kubernetes_packages:
+- name: kubelet
+  state: present
+- name: kubectl
+  state: present
+- name: kubeadm
+  state: present
+- name: kubernetes-cni
+  state: present
+
+kubernetes_version: '1.23'
+
+kubernetes_apt_release_channel: main
+kubernetes_apt_repository: "deb http://apt.kubernetes.io/ kubernetes-xenial {{ kubernetes_apt_release_channel }}"
+kubernetes_apt_ignore_key_error: false
+
+kubernetes_yum_arch: '$basearch'
+kubernetes_yum_base_url: "https://packages.cloud.google.com/yum/repos/kubernetes-el7-{{ kubernetes_yum_arch }}"
+kubernetes_yum_gpg_key:
+- https://packages.cloud.google.com/yum/doc/yum-key.gpg
+- https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+kubernetes_yum_gpg_check: true
+kubernetes_yum_repo_gpg_check: true
+
+
