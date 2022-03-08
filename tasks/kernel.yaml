@@ -67,4 +67,11 @@
     name:  "net.netfilter.nf_conntrack_max"
     value: "1000000"
 
-
+- name: Install IPVS utilities
+  package:
+    name: "{{ item }}"
+    state: "present"
+  notify: Restart kubelet
+  with_items:
+  - ipset
+  - ipvsadm
