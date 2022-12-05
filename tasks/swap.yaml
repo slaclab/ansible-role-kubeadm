@@ -1,5 +1,7 @@
 - name: disable swap
   command: swapoff --all
+  register: _swap
+  changed_when: _swap.rc != 0
 
 - name: Remove swap from /etc/fstab
   mount:
