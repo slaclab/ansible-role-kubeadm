@@ -1,5 +1,12 @@
 - name: Restart iptables
-  systemd: name=iptables state=restarted enabled=yes
+  systemd:
+    name: iptables
+    state: restarted
+    enabled: yes
 
 - name: Restart kubelet
-  systemd: name=kubelet state=restarted enabled=yes daemon_reload=yes
+  systemd:
+    name: kubelet
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

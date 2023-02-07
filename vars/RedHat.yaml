@@ -7,3 +7,4 @@ kubernetes_packages:
   state: present
 - name: kubernetes-cni
   state: present
+kubelet_config_path: /etc/sysconfig/kubelet

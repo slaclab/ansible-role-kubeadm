@@ -22,4 +22,5 @@ kubernetes_yum_gpg_key:
 kubernetes_yum_gpg_check: true
 kubernetes_yum_repo_gpg_check: true
 
-
+kubelet_config_path: /etc/sysconfig/kubelet
+kubelet_args: []
