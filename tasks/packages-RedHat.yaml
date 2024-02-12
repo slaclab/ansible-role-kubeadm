@@ -1,29 +1,19 @@
-- name: Ensure Kubernetes repository exists
-  yum_repository:
-    name: kubernetes
-    description: Kubernetes
-    enabled: true
-    gpgcheck: "{{ kubernetes_yum_gpg_check }}"
-    repo_gpgcheck: "{{ kubernetes_yum_repo_gpg_check }}"
-    baseurl: "{{ kubernetes_yum_base_url }}"
-    gpgkey: "{{ kubernetes_yum_gpg_key }}"
-
-- name: Add Kubernetes GPG keys
-  rpm_key:
-    key: "{{ item }}"
-    state: present
-  register: kubernetes_rpm_key
-  with_items: "{{ kubernetes_yum_gpg_key }}"
-
-- name: Make cache if Kubernetes GPG key changed
-  command: "yum -q makecache -y --disablerepo='*' --enablerepo='kubernetes'"
-  when: kubernetes_rpm_key is changed
-  args:
-    warn: false
+- name: "Update repo version {{ kubernetes_mayor }}"
+  ansible.builtin.copy:
+    content: |
+      "[kubernetes]
+      name=Kubernetes
+      baseurl=https://pkgs.k8s.io/core:/stable:/{{ kubernetes_mayor }}/rpm/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.k8s.io/core:/stable:/{{ kubernetes_mayor }}/rpm/repodata/repomd.xml.key
+      exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni"
+    dest: /etc/yum.repos.d/kubernetes.repo
 
 - name: Install Kubernetes
-  package:
+  ansible.builtin.dnf:
     name: "{{ item.name | default(item) }}"
     state: "{{ item.state | default('present') }}"
+    disable_excludes: "{{ item.disable_excludes | default('kubernetes') }}"
   notify: Restart kubelet
   with_items: "{{ kubernetes_packages }}"
